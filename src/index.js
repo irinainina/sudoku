@@ -1,65 +1,60 @@
-module.exports = function solveSudoku(board) {
-  var emptyPositions = saveEmptyPositions(board);
-  var limit = board.length / 3 * board[0].length / 3;
+module.exports = function solveSudoku(matrix) {
+  var emptyPositions = saveEmptyPositions(matrix);
+  var limit = matrix.length / 3 * matrix[0].length / 3;
   for(var i = 0; i < emptyPositions.length;) {
-    var y = emptyPositions[i][0];
-    var x = emptyPositions[i][1];
-    var value = board[y][x] + 1;
+    var row = emptyPositions[i][0];
+    var coll = emptyPositions[i][1];
+    var num = matrix[row][coll] + 1;
     var found = false;
-    while(!found && value <= limit) {
-      if(checkValue(board, x, y, value)) {
+    while(!found && num <= limit) {
+      if(checkNum(matrix, coll, row, num)) {
         found = true;
-        board[y][x] = value;
+        matrix[row][coll] = num;
         i++;
       } else {
-        value++;
+        num++;
       }
     }
     if(!found) {
-      board[y][x] = 0;
+      matrix[row][coll] = 0;
       i--;
     }
   }
-  board.forEach(function(row) {
-    console.log(row.join());
-  });
-  return board;
+  return matrix;
 };
 
-function saveEmptyPositions(board) {
-  var emptyPositions = [];
-
-  for(var i = 0; i < board.length; i++) {
-    for(var j = 0; j < board[i].length; j++) {
-      if(board[i][j] === 0) {
-        emptyPositions.push([i, j]);
+  function saveEmptyPositions(matrix){
+    var emptyPositions = [];
+    for(var row = 0; row < 9; row++){
+      for(var coll = 0; coll < 9; coll++){
+        if(matrix[row][coll] === 0){
+          emptyPositions.push([row,coll]);
+        }
       }
     }
-  }
+    return emptyPositions;
+  };
 
-  return emptyPositions;
-};
-
-function checkRow(board, position, value) {
-  for(var i = 0; i < board[position].length; i++) {
-    if(board[position][i] == value) {
+function checkRow(matrix, row, num) {
+  for(var i = 0; i < 9; i++) {
+    if(matrix[row][i] === num) {
       return false;
     }
   }
   return true;
 };
 
-function checkColumn(board, position, value) {
-  for(var i = 0; i < board.length; i++) {
-    if(board[i][position] == value) {
+function checkColumn(matrix, coll, num) {
+  for(var i = 0; i < 9; i++) {
+    if(matrix[i][coll] === num) {
       return false;
     }
   }
   return true;
 };
 
-function checkSquare(board, x, y, value) {
-  var squareSize = [board[0].length / 3, board.length / 3];
+function checkSquare(matrix, x, y, num) {
+  var squareSize = [matrix[0].length / 3, matrix.length / 3];
   var xCorner = 0;
   var yCorner = 0;
 
@@ -75,17 +70,18 @@ function checkSquare(board, x, y, value) {
 
   for(var i = yCorner; i < yCorner + squareSize[1]; i++) {
     for(var j = xCorner; j < xCorner + squareSize[0]; j++) {
-      if(board[i][j] == value) {        return false;
+      if(matrix[i][j] == num) {        
+        return false;
       }
     }
   }
   return true;
 };
 
-function checkValue(board, x, y, value) {
-  if(checkRow(board, y, value) &&
-    checkColumn(board, x, value) &&
-    checkSquare(board, x, y, value)) {
+function checkNum(matrix, x, y, num) {
+  if(checkRow(matrix, y, num) &&
+    checkColumn(matrix, x, num) &&
+    checkSquare(matrix, x, y, num)) {
     return true;
   } else {
     return false;
