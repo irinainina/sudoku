@@ -53,17 +53,6 @@ function checkRow(matrix, row, num) {
     return true;
   };
 
-    function checkSquare(matrix, row, coll, num) {
-        var row = Math.floor(row / 3) * 3;
-        var coll = Math.floor(coll / 3) * 3;
-        for (var r = 0; r < 3; r++) {
-            for (var c = 0; c < 3; c++) {
-                if (matrix[row + r][coll + c] === n) return false;
-            }
-        }
-        return true;
-    }
-
   function checkSquare(matrix, x, y, num) {
     var squareSize = [matrix[0].length / 3, matrix.length / 3];
     var xCorner = 0;
